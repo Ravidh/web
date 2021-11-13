@@ -6,6 +6,14 @@ from json2html import *
 
 app = Flask(__name__)
 
+home_b = "<br><h3><a href=/>Home</a></h3>"
+search_code = '''
+     <br><form action="/result" method="GET">
+         <input name="text">
+         <input type="submit" value="Go!">
+     </form><br>
+     '''
+
 @app.route("/")
 def main():
     names, info = p_list("/home/ravidh/wis-advanced-python-2021-2022/students/")
@@ -16,19 +24,9 @@ def main():
         link = "<a href=/"+name.split(' ')[0]+">"+name+"</a>"
         names_links.append(link)
 
-    names_links.append("<br><a href=/search>Search</a>")
-    names_links.append("<br><a href=/>Home</a>")
+    names_links.append(home_b)
     list_names = '<br>'.join(names_links)
-    return list_names
-
-@app.route("/search")
-def search():
-    return '''
-     <form action="/result" method="GET">
-         <input name="text">
-         <input type="submit" value="Go!">
-     </form>
-     '''
+    return search_code+list_names
 
 @app.route("/result")
 def result():
@@ -42,16 +40,14 @@ def result():
 
     if len(info) == 0:
         names_links.insert(0,"No mathes found!<br>")
-    else:
-        names_links.append("<br><a href=/search>Search</a>")
 
-    names_links.append("<br><a href=/>Home</a>")
+    names_links.append(home_b)
     list_names = '<br>'.join(names_links)
-    return list_names
+    return search_code + list_names
 
 @app.route("/<name>")
 def name_info(name):
     names, info = p_list("/home/ravidh/wis-advanced-python-2021-2022/students/")
     for i in info:
         if name in i["name"]:
-            return json2html.convert(json = i)+"<br><a href=/>Home</a>"
+            return search_code + json2html.convert(json = i) + home_b
