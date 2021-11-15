@@ -2,7 +2,7 @@ from flask import Flask, request
 from glob import glob
 import json
 from peoplelist import p_list
-from json2html import *
+from jsontext import jsontext
 
 app = Flask(__name__)
 
@@ -50,4 +50,4 @@ def name_info(name):
     names, info = p_list("/home/ravidh/wis-advanced-python-2021-2022/students/")
     for i in info:
         if name in i["name"]:
-            return search_code + json2html.convert(json = i) + home_b
+            return search_code + jsontext(i) + home_b
